@@ -64,7 +64,7 @@ interface ToastContainerProps {
 
 export function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   return (
-    <div className="fixed top-5 right-5 z-10000 flex flex-col gap-2 max-w-[400px] w-[calc(100%-40px)] sm:top-2.5 sm:right-2.5 sm:left-2.5 sm:max-w-full sm:w-[calc(100%-20px)]">
+    <div className="absolute top-5 right-5 z-10000">
       {toasts.map(toast => (
         <ToastItem key={toast.id} toast={toast} onRemove={onRemove} />
       ))}

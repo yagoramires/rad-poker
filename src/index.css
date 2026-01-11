@@ -82,11 +82,8 @@ body {
   margin: 0;
   padding: 0;
   background: #008080;
-  min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  min-width: 100dvw;
   overflow-x: hidden;
   position: relative;
   touch-action: manipulation;
@@ -194,13 +191,7 @@ body::after {
 }
 
 .poker-cards-grid {
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-}
-
-@media (max-width: 640px) {
-  .poker-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-  }
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 }
 
 @media (max-width: 480px) {
@@ -401,15 +392,8 @@ body::after {
 }
 
 .touch-friendly {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-@media (max-width: 768px) {
-  .touch-friendly {
-    min-height: 48px;
-    min-width: 48px;
-  }
+  min-height: 32px;
+  min-width: 32px;
 }
 
 .user-select-none {

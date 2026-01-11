@@ -92,7 +92,6 @@ export class SignalingClient {
           if (connectionTimeout) {
             clearTimeout(connectionTimeout)
           }
-          console.log(`[WS] Conectado com ID: ${this.peerId}`)
           this.reconnectAttempts = 0
           this.reconnectDelay = 1000
           this.emit('open', { type: 'OPEN', src: this.peerId!, payload: {} })
@@ -102,7 +101,6 @@ export class SignalingClient {
         this.ws.onmessage = (event) => {
           try {
             const message: WSMessage = JSON.parse(event.data)
-            console.log('[WS] Mensagem recebida:', message)
             this.handleMessage(message)
           } catch (error) {
             console.error('[WS] Erro ao processar mensagem:', error)
@@ -184,7 +182,6 @@ export class SignalingClient {
           ...message,
           src: this.peerId
         }
-        console.log('[WS] Enviando mensagem:', msgToSend)
         this.ws.send(JSON.stringify(msgToSend))
       } catch (error) {
         console.error('[WS] Erro ao enviar mensagem:', error)

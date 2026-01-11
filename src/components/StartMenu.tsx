@@ -5,7 +5,7 @@ interface StartMenuProps {
   onClose: () => void
   onShowAbout: () => void
   onShowHelp: () => void
-  onShowClippy: () => void
+  onShowClippy?: () => void
 }
 
 export function StartMenu({ isOpen, onClose, onShowAbout, onShowHelp, onShowClippy }: StartMenuProps) {
@@ -72,7 +72,7 @@ export function StartMenu({ isOpen, onClose, onShowAbout, onShowHelp, onShowClip
     >
       <div className="flex">
         <div className="w-[25px] bg-linear-to-b from-win98-blue to-win98-light-blue flex items-end justify-center py-2 sm:w-[22px]">
-          <div className="text-white font-bold text-xs transform -rotate-90 whitespace-nowrap origin-center sm:text-[10px]">
+          <div className="pl-6 text-white font-bold text-xs transform -rotate-90 whitespace-nowrap origin-center sm:text-[10px]">
             Poker <span className="text-[10px] sm:text-[8px]">98</span>
           </div>
         </div>

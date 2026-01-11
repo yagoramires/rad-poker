@@ -6,14 +6,12 @@ import type {
   RoomStatePayload, 
   PlayerJoinedPayload,
   PlayerLeftPayload,
-  VoteReceivedPayload,
-  VotesRevealedPayload,
   JoinRoomPayload,
   VotePayload,
   PlayerRole
 } from '../types/poker'
 
-const pokerCards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?', '☕']
+const pokerCards = ['☕', 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?']
 
 export function usePokerSession(roomCode: string, playerName: string = '', playerRole?: PlayerRole) {
   const [state, setState] = useState<PokerSessionState>({
@@ -37,17 +35,13 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
   stateRef.current = state
 
   const handleMessage = useCallback((message: WSMessage) => {
-    console.log('[POKER] Mensagem recebida:', message)
-
     switch (message.type) {
       case 'OPEN': {
-        console.log('[POKER] Conexão WebSocket estabelecida')
         break
       }
 
       case 'ROOM_STATE': {
         const payload = message.payload as RoomStatePayload
-        console.log('[POKER] Estado da sala:', payload)
         
         setState(prev => ({
           ...prev,
@@ -60,7 +54,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
 
       case 'PLAYER_JOINED': {
         const payload = message.payload as PlayerJoinedPayload
-        console.log('[POKER] Jogador entrou:', payload.player)
         
         notificationHandlerRef.current?.(`${payload.player.name} entrou na sala`, 'info')
         break
@@ -68,7 +61,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
 
       case 'PLAYER_LEFT': {
         const payload = message.payload as PlayerLeftPayload
-        console.log('[POKER] Jogador saiu:', payload.playerId)
         
         setState(prev => {
           const leavingPlayer = prev.players.find(p => p.id === payload.playerId)
@@ -81,22 +73,15 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
       }
 
       case 'VOTE_RECEIVED': {
-        const payload = message.payload as VoteReceivedPayload
-        console.log('[POKER] Voto recebido:', payload)
         break
       }
 
       case 'VOTES_REVEALED': {
-        const payload = message.payload as VotesRevealedPayload
-        console.log('[POKER] Votos revelados:', payload)
-        
         notificationHandlerRef.current?.('Estimativas reveladas!', 'success')
         break
       }
 
       case 'VOTES_RESET': {
-        console.log('[POKER] Votos resetados')
-        
         setState(prev => ({
           ...prev,
           myVote: null,
@@ -109,7 +94,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
 
       case 'NEW_TASK': {
         const payload = message.payload as { task: string }
-        console.log('[POKER] Nova tarefa:', payload)
         
         setState(prev => ({
           ...prev,
@@ -137,11 +121,9 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
 
   useEffect(() => {
     if (signalingClientRef.current?.isConnected()) {
-      console.log('[POKER] WebSocket já conectado, ignorando nova conexão')
       return
     }
 
-    console.log('[POKER] Inicializando nova conexão...')
     const client = new SignalingClient()
     signalingClientRef.current = client
 
@@ -149,8 +131,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
 
     client.connect()
       .then((peerId) => {
-        console.log('[POKER] Conectado com Peer ID:', peerId)
-        
         setState(prev => ({
           ...prev,
           myPeerId: peerId,
@@ -171,7 +151,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
             } as JoinRoomPayload
           }
           
-          console.log('[POKER] Entrando na sala:', joinMessage)
           client.sendMessage(joinMessage)
         }
       })
@@ -189,7 +168,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
       })
 
     return () => {
-      console.log('[POKER] Limpando componente, desconectando WebSocket...')
       hasJoinedRoomRef.current = false
       client.off('*', handleMessage)
       client.disconnect()
@@ -225,8 +203,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
         vote: card
       } as VotePayload
     }
-
-    console.log('[POKER] Enviando voto:', voteMessage)
     
     try {
       client.sendMessage(voteMessage)
@@ -255,8 +231,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
         roomId: roomCode
       }
     }
-
-    console.log('[POKER] Revelando votos:', revealMessage)
     
     try {
       client.sendMessage(revealMessage)
@@ -292,8 +266,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
         roomId: roomCode
       }
     }
-
-    console.log('[POKER] Resetando votos:', resetMessage)
     
     try {
       client.sendMessage(resetMessage)
@@ -331,8 +303,6 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
         task
       }
     }
-
-    console.log('[POKER] Definindo tarefa:', taskMessage)
     
     try {
       client.sendMessage(taskMessage)

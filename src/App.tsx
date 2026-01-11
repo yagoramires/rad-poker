@@ -1,12 +1,10 @@
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Home from './pages/Home'
 import Poker from './pages/Poker'
-import { Clippy } from './components/Clippy'
 import { StartMenu } from './components/StartMenu'
 import { AboutDialog, HelpDialog } from './components/Dialog'
-import { DesktopIcon } from './components/DesktopIcon'
-import { ThemeSelector } from './components/ThemeSelector'
+import { Clippy } from './components/Clippy'
 
 function TaskbarClock() {
   const [time, setTime] = useState(new Date())
@@ -26,37 +24,27 @@ function TaskbarClock() {
 }
 
 function AppContent() {
-  const location = useLocation()
+  // const location = useLocation()
   const [showClippy, setShowClippy] = useState(false)
   const [showStartMenu, setShowStartMenu] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [clickCount, setClickCount] = useState(0)
-  const isHomePage = location.pathname === '/'
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const random = Math.random()
-      if (random > 0.7) {
-        setShowClippy(true)
-      }
-    }, 5000)
-    return () => clearTimeout(timer)
-  }, [])
+  // const isHomePage = location.pathname === '/'
 
   const handleLogoClick = () => {
     setClickCount(prev => prev + 1)
     if (clickCount >= 4) {
-      setShowClippy(true)
+      // setShowClippy(true)
       setClickCount(0)
     }
   }
 
   return (
-    <div className="min-h-dvh bg-transparent pb-[30px] w-full overflow-x-hidden sm:pb-[25px] relative">
-      <ThemeSelector />
+    <div className="min-h-dvh lg:p-6 w-full overflow-x-hidden relative">
+      {/* <ThemeSelector /> */}
       
-      {isHomePage && (
+      {/* {isHomePage && (
         <div className="fixed top-4 left-4 z-10 flex flex-col gap-4 sm:top-2 sm:left-2 sm:gap-3 xs:hidden">
           <DesktopIcon 
             icon="🎴" 
@@ -74,7 +62,7 @@ function AppContent() {
             onClick={() => setShowHelp(true)}
           />
         </div>
-      )}
+      )} */}
 
       {showClippy && <Clippy onClose={() => setShowClippy(false)} />}
 
