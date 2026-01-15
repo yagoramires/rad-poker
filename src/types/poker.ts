@@ -8,6 +8,7 @@ export interface Player {
   role?: PlayerRole
   vote?: number | null
   hasVoted?: boolean
+  isHost?: boolean
 }
 
 export interface WSMessage {
@@ -30,6 +31,7 @@ export interface VotePayload {
 
 export interface RoomStatePayload {
   roomId: string
+  hostId?: string
   players: Player[]
   currentTask: string
   votesRevealed: boolean
@@ -67,6 +69,7 @@ export interface PokerSessionState {
   myPlayerName: string
   myPlayerRole?: PlayerRole
   players: Player[]
+  hostId: string | null
   currentTask: string
   isConnected: boolean
   votesRevealed: boolean

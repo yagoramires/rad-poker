@@ -28,9 +28,8 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, stream
         
         <div className="grid gap-2 mt-2 sm:gap-1.5 sm:mt-1.5 xs:gap-1 xs:mt-1 poker-cards-grid">
           {cards.map((card, index) => {
-            const isSelected = streamingMode && !votesRevealed 
-              ? false 
-              : selectedIndex === index
+            const isSelected = selectedIndex === index
+            const shouldShowSelected = isSelected && (!streamingMode || votesRevealed)
             const isDisabled = votesRevealed
             
             return (
@@ -41,7 +40,7 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, stream
                     ? 'active:translate-x-0 active:translate-y-0'
                     : 'active:translate-x-px active:translate-y-px disabled:active:translate-x-0 disabled:active:translate-y-0'
                 } ${
-                  isSelected 
+                  shouldShowSelected 
                     ? 'border-[#0000ff] border-r-[#0000ff] border-b-[#0000ff] bg-[#c0c0ff] shadow-[inset_2px_2px_0_#0000ff,inset_-2px_-2px_0_#8080ff] animate-bounce-in' 
                     : `border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray active:border-win98-dark-gray active:border-r-win98-white active:border-b-win98-white ${streamingMode && !votesRevealed ? '' : 'hover:bg-win98-light-gray'}`
                 } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -50,12 +49,12 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, stream
                 title={`Estimar ${card}`}
               >
                 <div className={`w-full h-full flex flex-col items-center justify-center border m-0.5 ${
-                  isSelected 
+                  shouldShowSelected 
                     ? 'bg-[#e0e0ff] border-[#0000ff]' 
                     : 'bg-win98-white border-win98-black'
                 }`}>
                   <div className={`text-2xl font-bold sm:text-lg xs:text-base ${
-                    isSelected 
+                    shouldShowSelected 
                       ? 'text-[#0000ff] scale-110' 
                       : streamingMode && !votesRevealed
                         ? 'text-black'
@@ -63,7 +62,7 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, stream
                   }`}>
                     {card}
                   </div>
-                  {!isDisabled && !isSelected && (!streamingMode || votesRevealed) && (
+                  {!isDisabled && !shouldShowSelected && (!streamingMode || votesRevealed) && (
                     <div className="text-[8px] text-win98-dark-gray mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {getVoteEmoji(card)}
                     </div>

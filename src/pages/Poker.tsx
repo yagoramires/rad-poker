@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { usePokerSession } from '../hooks/usePokerSession'
 import { useToast } from '../hooks/useToast'
@@ -43,6 +43,7 @@ function Poker() {
     isConnected,
     votesRevealed,
     players,
+    hostId,
     pokerCards,
     vote,
     revealVotes,
@@ -91,9 +92,10 @@ function Poker() {
     }
   }, [sessionError, warning])
 
-  const myVoteIndex = myVote !== null 
-    ? pokerCards.findIndex(card => card === myVote)
-    : null
+  const myVoteIndex = useMemo(() => {
+    if (myVote === null) return null
+    return pokerCards.findIndex(card => card === myVote)
+  }, [myVote, pokerCards])
 
   const copyRoomCode = async () => {
     const url = new URL(window.location.href)
@@ -120,7 +122,6 @@ function Poker() {
     }
   }
 
-  const allPlayersVoted = players.length > 0 && players.every(p => p.hasVoted)
   const canReveal = myVote !== null && !votesRevealed
 
   const handleTitleClick = () => {
@@ -133,6 +134,8 @@ function Poker() {
     }
   }
 
+  console.log('hostID', hostId)
+  console.log('myPeerId', myPeerId)
 
   return (
     <>
@@ -203,7 +206,7 @@ function Poker() {
           onReveal={revealVotes}
           onClear={clearVote}
           onReset={resetVotes}
-          isHost={players.length > 0 && players[0]?.id === myPeerId}
+          isHost={hostId !== null && hostId === myPeerId}
         />
       </Window>
     </>

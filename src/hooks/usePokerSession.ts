@@ -20,6 +20,7 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
     myPlayerName: playerName || `Jogador-${Math.random().toString(36).substring(2, 6)}`,
     myPlayerRole: playerRole,
     players: [],
+    hostId: null,
     currentTask: '',
     isConnected: false,
     votesRevealed: false,
@@ -57,12 +58,20 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
           const myPlayer = payload.players?.find(p => p.id === prev.myPeerId)
           const myVoteFromServer = myPlayer?.vote ?? null
           
+          let finalVote = prev.myVote
+          if (myVoteFromServer !== null) {
+            finalVote = myVoteFromServer
+          } else if (prev.myVote === null) {
+            finalVote = null
+          }
+          
           return {
             ...prev,
             players: payload.players || [],
+            hostId: payload.hostId || null,
             currentTask: payload.currentTask || '',
             votesRevealed: payload.votesRevealed || false,
-            myVote: myVoteFromServer
+            myVote: finalVote
           }
         })
         break

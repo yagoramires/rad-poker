@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useMediaQuery } from './hooks/useMediaQuery'
 import Home from './pages/Home'
 import Poker from './pages/Poker'
 import { StartMenu } from './components/StartMenu'
@@ -31,6 +32,7 @@ function AppContent() {
   const [showHelp, setShowHelp] = useState(false)
   const [clickCount, setClickCount] = useState(0)
   // const isHomePage = location.pathname === '/'
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   const handleLogoClick = () => {
     setClickCount(prev => prev + 1)
@@ -43,7 +45,7 @@ function AppContent() {
   return (
     <div className="min-h-dvh lg:p-6 w-full overflow-x-hidden relative">
       {/* <ThemeSelector /> */}
-      
+
       {/* {isHomePage && (
         <div className="fixed top-4 left-4 z-10 flex flex-col gap-4 sm:top-2 sm:left-2 sm:gap-3 xs:hidden">
           <DesktopIcon 
@@ -65,46 +67,48 @@ function AppContent() {
       )} */}
 
       {showClippy && <Clippy onClose={() => setShowClippy(false)} />}
+      {isDesktop && (
+        <>
+          <nav className="fixed bottom-0 left-0 right-0 bg-win98-gray border-t-2 border-win98-white flex items-stretch z-9997 h-[30px] sm:h-[25px]">
+            <button
+              onClick={() => setShowStartMenu(!showStartMenu)}
+              className={`bg-win98-gray border border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray px-2 py-1 text-[11px] font-bold cursor-pointer flex items-center gap-1 hover:bg-win98-light-gray sm:px-1.5 sm:text-[10px] sm:gap-0.5 xs:text-[9px] ${showStartMenu ? 'border-win98-dark-gray border-r-win98-white border-b-win98-white' : ''
+                }`}
+            >
+              <span className="text-base sm:text-sm xs:text-xs">🪟</span>
+              <span className="hidden sm:inline">Iniciar</span>
+            </button>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-win98-gray border-t-2 border-win98-white flex items-stretch z-9997 h-[30px] sm:h-[25px]">
-        <button
-          onClick={() => setShowStartMenu(!showStartMenu)}
-          className={`bg-win98-gray border border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray px-2 py-1 text-[11px] font-bold cursor-pointer flex items-center gap-1 hover:bg-win98-light-gray sm:px-1.5 sm:text-[10px] sm:gap-0.5 xs:text-[9px] ${
-            showStartMenu ? 'border-win98-dark-gray border-r-win98-white border-b-win98-white' : ''
-          }`}
-        >
-          <span className="text-base sm:text-sm xs:text-xs">🪟</span>
-          <span className="hidden sm:inline">Iniciar</span>
-        </button>
+            <div className="h-[2px] w-[2px] bg-win98-dark-gray mx-0.5 self-center"></div>
 
-        <div className="h-[2px] w-[2px] bg-win98-dark-gray mx-0.5 self-center"></div>
+            <div className="flex gap-0.5 flex-1 items-center overflow-x-auto scrollbar-thin px-0.5">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `bg-win98-gray border border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray px-2 py-1 text-black text-[11px] font-bold cursor-pointer inline-flex items-center gap-1 hover:bg-win98-light-gray whitespace-nowrap sm:px-1.5 sm:text-[10px] sm:gap-0.5 xs:text-[9px] xs:px-1 ${isActive
+                    ? 'bg-win98-light-gray border-win98-dark-gray border-r-win98-white border-b-win98-white'
+                    : ''
+                  }`
+                }
+              >
+                <span>🎴</span>
+                <span className="sm:hidden">Scrum Poker</span>
+              </NavLink>
+            </div>
 
-        <div className="flex gap-0.5 flex-1 items-center overflow-x-auto scrollbar-thin px-0.5">
-          <NavLink 
-            to="/" 
-            className={({ isActive }) => 
-              `bg-win98-gray border border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray px-2 py-1 text-black text-[11px] font-bold cursor-pointer inline-flex items-center gap-1 hover:bg-win98-light-gray whitespace-nowrap sm:px-1.5 sm:text-[10px] sm:gap-0.5 xs:text-[9px] xs:px-1 ${
-                isActive 
-                  ? 'bg-win98-light-gray border-win98-dark-gray border-r-win98-white border-b-win98-white' 
-                  : ''
-              }`
-            }
-          >
-            <span>🎴</span>
-            <span className="sm:hidden">Scrum Poker</span>
-          </NavLink>
-        </div>
+            <TaskbarClock />
+          </nav>
 
-        <TaskbarClock />
-      </nav>
 
-      <StartMenu 
-        isOpen={showStartMenu} 
-        onClose={() => setShowStartMenu(false)}
-        onShowAbout={() => setShowAbout(true)}
-        onShowHelp={() => setShowHelp(true)}
-        onShowClippy={() => setShowClippy(true)}
-      />
+          <StartMenu
+            isOpen={showStartMenu}
+            onClose={() => setShowStartMenu(false)}
+            onShowAbout={() => setShowAbout(true)}
+            onShowHelp={() => setShowHelp(true)}
+            onShowClippy={() => setShowClippy(true)}
+          />
+        </>
+      )}
 
       <AboutDialog isOpen={showAbout} onClose={() => setShowAbout(false)} />
       <HelpDialog isOpen={showHelp} onClose={() => setShowHelp(false)} />
