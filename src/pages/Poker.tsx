@@ -120,7 +120,8 @@ function Poker() {
     }
   }
 
-  const canReveal = myVote !== null && !votesRevealed
+  const allPlayersVoted = players.length > 0 && players.every(p => p.hasVoted)
+  const canReveal = myVote !== null && !votesRevealed && allPlayersVoted
 
   const handleTitleClick = () => {
     setSecretClicks(prev => prev + 1)
@@ -203,6 +204,7 @@ function Poker() {
           onClear={clearVote}
           onReset={resetVotes}
           isHost={players.length > 0 && players[0]?.id === myPeerId}
+          allPlayersVoted={allPlayersVoted}
         />
       </Window>
     </>

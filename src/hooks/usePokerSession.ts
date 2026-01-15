@@ -53,12 +53,18 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
       case 'ROOM_STATE': {
         const payload = message.payload as RoomStatePayload
         
-        setState(prev => ({
-          ...prev,
-          players: payload.players || [],
-          currentTask: payload.currentTask || '',
-          votesRevealed: payload.votesRevealed || false
-        }))
+        setState(prev => {
+          const myPlayer = payload.players?.find(p => p.id === prev.myPeerId)
+          const myVoteFromServer = myPlayer?.vote ?? null
+          
+          return {
+            ...prev,
+            players: payload.players || [],
+            currentTask: payload.currentTask || '',
+            votesRevealed: payload.votesRevealed || false,
+            myVote: myVoteFromServer
+          }
+        })
         break
       }
 
