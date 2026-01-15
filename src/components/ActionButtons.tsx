@@ -6,7 +6,6 @@ interface ActionButtonsProps {
   onClear: () => void
   onReset: () => void
   isHost?: boolean
-  allPlayersVoted?: boolean
 }
 
 export function ActionButtons({
@@ -16,16 +15,14 @@ export function ActionButtons({
   onReveal,
   onClear,
   onReset,
-  isHost = false,
-  allPlayersVoted = false
+  isHost = false
 }: ActionButtonsProps) {
   const canRevealAsHost = canReveal && isHost
 
   const getRevealTitle = () => {
-    if (!isHost) return 'Apenas o host da sala pode revelar estimativas'
-    if (!hasVote) return 'Vote primeiro para revelar estimativas'
-    if (!allPlayersVoted) return 'Aguarde todos os jogadores votarem'
+    if (!isHost) return 'Somente o host pode revelar as estimativas'
     if (votesRevealed) return 'Estimativas já foram reveladas'
+    if (!hasVote) return 'Vote primeiro para revelar estimativas'
     return 'Mostrar todas as estimativas'
   }
 

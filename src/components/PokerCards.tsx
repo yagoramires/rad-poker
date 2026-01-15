@@ -28,7 +28,9 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, stream
         
         <div className="grid gap-2 mt-2 sm:gap-1.5 sm:mt-1.5 xs:gap-1 xs:mt-1 poker-cards-grid">
           {cards.map((card, index) => {
-            const isSelected = selectedIndex === index && (!streamingMode || votesRevealed)
+            const isSelected = streamingMode && !votesRevealed 
+              ? false 
+              : selectedIndex === index
             const isDisabled = votesRevealed
             
             return (
