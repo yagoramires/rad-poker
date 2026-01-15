@@ -111,7 +111,7 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
                           ? (
                             <span className="flex items-center gap-1">
                               {player.vote !== null && player.vote !== undefined && getVoteEmoji(player.vote)}
-                              <span>{player.vote !== null && player.vote !== undefined ? String(player.vote) : '-'}</span>
+                              <span>{player.vote !== null && player.vote !== undefined ? String(player.vote) : '☕'}</span>
                             </span>
                           )
                           : (player.hasVoted ? <span className="animate-pulse-slow">✓</span> : '⏳')}

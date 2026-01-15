@@ -17,7 +17,7 @@ export function RoomInfo({ roomCode, isConnected, playerName, onCopyRoomCode }: 
           <button
             onClick={onCopyRoomCode}
             className="border p-0.5 border-win98-dark-gray border-r-win98-white border-b-win98-white cursor-pointer"
-            title="Copiar código da sala"
+            title="Copiar link da sala"
           >
             📋 Copiar
           </button>

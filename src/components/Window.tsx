@@ -12,6 +12,7 @@ interface WindowProps {
   onMaximize?: () => void
   footerLeft?: ReactNode
   footerRight?: ReactNode
+  headerActions?: ReactNode
   children: ReactNode
   className?: string
   maxWidth?: string
@@ -27,6 +28,7 @@ export function Window({
   onMaximize,
   footerLeft,
   footerRight,
+  headerActions,
   children,
   className = '',
   maxWidth = 'max-w-[500px]'
@@ -42,6 +44,7 @@ export function Window({
           onClose={onClose}
           onMinimize={onMinimize}
           onMaximize={onMaximize}
+          headerActions={headerActions}
         />
         <div className="bg-win98-gray p-2 border border-win98-dark-gray border-r-win98-white border-b-win98-white m-0.5 overflow-x-hidden overflow-y-auto flex-1 min-h-0 max-h-[calc(100dvh-80px)] scrollbar-thin scrollbar-thumb-win98-dark-gray scrollbar-track-win98-gray sm:max-h-[calc(100dvh-70px)] sm:p-1.5 xs:max-h-[calc(100dvh-65px)] xs:p-1">
           {children}

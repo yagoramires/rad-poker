@@ -34,6 +34,16 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
   const hasJoinedRoomRef = useRef(false)
   stateRef.current = state
 
+  useEffect(() => {
+    if (playerName && playerName.trim()) {
+      setState(prev => ({
+        ...prev,
+        myPlayerName: playerName.trim(),
+        myPlayerRole: playerRole
+      }))
+    }
+  }, [playerName, playerRole])
+
   const handleMessage = useCallback((message: WSMessage) => {
     switch (message.type) {
       case 'OPEN': {
@@ -120,6 +130,10 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
   }, [])
 
   useEffect(() => {
+    if (!roomCode || !playerName || !playerName.trim()) {
+      return
+    }
+
     if (signalingClientRef.current?.isConnected()) {
       return
     }
@@ -146,7 +160,7 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
             type: 'JOIN_ROOM',
             payload: {
               roomId: roomCode,
-              name: playerName || `Jogador-${Math.random().toString(36).substring(2, 6)}`,
+              name: playerName.trim(),
               role: playerRole
             } as JoinRoomPayload
           }

@@ -3,6 +3,7 @@ interface PokerCardsProps {
   selectedIndex: number | null
   votesRevealed: boolean
   onVote: (index: number) => void
+  streamingMode?: boolean
 }
 
 function getVoteEmoji(vote: string | number) {
@@ -16,7 +17,7 @@ function getVoteEmoji(vote: string | number) {
   return '🎴'
 }
 
-export function PokerCards({ cards, selectedIndex, votesRevealed, onVote }: PokerCardsProps) {
+export function PokerCards({ cards, selectedIndex, votesRevealed, onVote, streamingMode = false }: PokerCardsProps) {
   return (
     <>
       <div className="h-0.5 bg-win98-dark-gray border-t border-win98-white my-2 shrink-0 sm:my-1.5 xs:my-1"></div>
@@ -27,7 +28,8 @@ export function PokerCards({ cards, selectedIndex, votesRevealed, onVote }: Poke
         
         <div className="grid gap-2 mt-2 sm:gap-1.5 sm:mt-1.5 xs:gap-1 xs:mt-1 poker-cards-grid">
           {cards.map((card, index) => {
-            const isSelected = selectedIndex === index
+            const hasVoted = selectedIndex !== null
+            const isSelected = selectedIndex === index && (!streamingMode || hasVoted || votesRevealed)
             const isDisabled = votesRevealed
             
             return (

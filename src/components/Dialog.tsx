@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react'
 import type { ReactNode } from "react"
+import type { PlayerRole } from '../types/poker'
+import { getCachedPlayerName, getCachedPlayerRole, setCachedPlayerName, setCachedPlayerRole } from '../utils/storage'
 
 interface DialogProps {
   isOpen: boolean
@@ -105,5 +108,94 @@ export function HelpDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         </div>
       </div>
     </Dialog>
+  )
+}
+
+interface PlayerInfoDialogProps {
+  isOpen: boolean
+  onConfirm: (playerName: string, playerRole: PlayerRole) => void
+}
+
+export function PlayerInfoDialog({ isOpen, onConfirm }: PlayerInfoDialogProps) {
+  const [nameValue, setNameValue] = useState('')
+  const [roleValue, setRoleValue] = useState<PlayerRole>('other')
+
+  useEffect(() => {
+    if (isOpen) {
+      setNameValue(getCachedPlayerName())
+      setRoleValue(getCachedPlayerRole())
+    }
+  }, [isOpen])
+
+  const handleConfirm = () => {
+    const trimmedName = nameValue.trim()
+    if (trimmedName) {
+      setCachedPlayerName(trimmedName)
+      setCachedPlayerRole(roleValue)
+      onConfirm(trimmedName, roleValue)
+    }
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black bg-opacity-30">
+      <div className="bg-win98-gray border-2 border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray shadow-win98 w-full max-w-[400px] window-maximize">
+        <div className="bg-linear-to-r from-win98-blue to-win98-light-blue text-white px-1 py-0.5 flex justify-between items-center text-[11px] font-bold h-[18px] cursor-move">
+          <div className="flex items-center gap-1">
+            <span className="text-sm">👤</span>
+            <span>Informações do Jogador</span>
+          </div>
+        </div>
+        <div className="p-3 sm:p-2">
+          <div className="space-y-4">
+            <div>
+              <div className="text-[11px] font-bold mb-2 text-black sm:text-[10px] sm:mb-1.5 xs:text-[9px]">
+                <span className="mr-1">👤</span>Seu nome:
+              </div>
+              <input
+                type="text"
+                value={nameValue}
+                onChange={(e) => setNameValue(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && nameValue.trim() && handleConfirm()}
+                className="bg-win98-white border-2 border-win98-dark-gray border-r-win98-white border-b-win98-white px-2 py-1 text-sm font-bold w-full box-border font-win98 focus:outline-none focus:border-win98-blue focus:bg-[#ffffe1] sm:text-xs sm:px-1.5 sm:py-0.5 xs:text-xs xs:px-1.5 xs:py-0.5 touch-friendly transition-colors"
+                style={{ textTransform: 'none', letterSpacing: 'normal' }}
+                placeholder="Digite seu nome"
+                maxLength={20}
+                autoFocus
+              />
+            </div>
+
+            <div>
+              <div className="text-[11px] font-bold mb-2 text-black sm:text-[10px] sm:mb-1.5 xs:text-[9px]">
+                <span className="mr-1">💼</span>Sua função:
+              </div>
+              <select
+                value={roleValue}
+                onChange={(e) => setRoleValue(e.target.value as PlayerRole)}
+                className="bg-win98-white border-2 border-win98-dark-gray border-r-win98-white border-b-win98-white px-2 py-1 text-sm font-bold w-full box-border font-win98 focus:outline-none focus:border-win98-blue focus:bg-[#ffffe1] sm:text-xs sm:px-1.5 sm:py-0.5 xs:text-xs xs:px-1.5 xs:py-0.5 touch-friendly transition-colors cursor-pointer"
+              >
+                <option value="frontend">💻 Frontend</option>
+                <option value="backend">⚙️ Backend</option>
+                <option value="fullstack">🚀 Fullstack</option>
+                <option value="designer">🎨 Designer</option>
+                <option value="product">📊 Product</option>
+                <option value="qa">🔍 QA</option>
+                <option value="other">👤 Outro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-win98-dark-gray p-2 flex justify-end gap-2">
+          <button
+            onClick={handleConfirm}
+            disabled={!nameValue.trim()}
+            className="bg-win98-gray border-2 border-win98-white border-r-win98-dark-gray border-b-win98-dark-gray px-4 py-1 text-[11px] font-bold cursor-pointer min-w-[75px] active:border-win98-dark-gray active:border-r-win98-white active:border-b-win98-white active:translate-x-px active:translate-y-px sm:px-3 sm:text-[10px] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:translate-x-0 disabled:active:translate-y-0 disabled:active:border-win98-white disabled:active:border-r-win98-dark-gray disabled:active:border-b-win98-dark-gray hover:bg-win98-light-gray transition-colors"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
