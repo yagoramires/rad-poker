@@ -292,12 +292,38 @@ export function usePokerSession(roomCode: string, playerName: string = '', playe
   }, [roomCode])
 
   const clearVote = useCallback(() => {
+    const client = signalingClientRef.current
+    
+    if (!client || !client.isConnected()) {
+      setState(prev => ({
+        ...prev,
+        error: 'Não conectado ao servidor'
+      }))
+      return
+    }
+
     setState(prev => ({
       ...prev,
       myVote: null,
       error: null
     }))
-  }, [])
+
+    const clearVoteMessage: WSMessage = {
+      type: 'CLEAR_VOTE',
+      payload: {
+        roomId: roomCode
+      }
+    }
+    
+    try {
+      client.sendMessage(clearVoteMessage)
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'Erro ao limpar voto'
+      }))
+    }
+  }, [roomCode])
 
   const setTask = useCallback((task: string) => {
     const client = signalingClientRef.current
