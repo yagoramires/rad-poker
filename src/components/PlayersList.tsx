@@ -59,6 +59,22 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
     playersByRole[role].push(player)
   })
 
+  Object.keys(playersByRole).forEach(role => {
+    playersByRole[role].sort((a, b) => {
+      const nameA = (a.name || `Jogador-${a.id.slice(0, 6)}`).toLowerCase()
+      const nameB = (b.name || `Jogador-${b.id.slice(0, 6)}`).toLowerCase()
+      return nameA.localeCompare(nameB, 'pt-BR')
+    })
+  })
+
+  const sortedRoles = Object.keys(playersByRole).sort((a, b) => {
+    if (myPlayerRole) {
+      if (a === myPlayerRole) return -1
+      if (b === myPlayerRole) return 1
+    }
+    return a.localeCompare(b, 'pt-BR')
+  })
+
   const allPlayersVoted = players.length > 0 && players.every(p => p.hasVoted)
 
   return (
@@ -89,7 +105,9 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
           </div>
         </div>
         <div className="flex flex-col gap-3 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-win98-dark-gray scrollbar-track-win98-white sm:gap-2 sm:mt-1.5 sm:max-h-[200px] xs:gap-1.5 xs:mt-1 xs:max-h-[150px]">
-          {Object.entries(playersByRole).map(([role, rolePlayers]) => (
+          {sortedRoles.map((role) => {
+            const rolePlayers = playersByRole[role]
+            return (
             <div key={role} className="bg-win98-white border-2 border-win98-dark-gray border-r-win98-white border-b-win98-white p-2 sm:p-1.5 xs:p-1 hover:shadow-sm transition-shadow">
               <div className="text-[11px] font-bold mb-1.5 text-win98-blue sm:text-[10px] sm:mb-1 xs:text-[9px] flex items-center gap-1">
                 <span>{getRoleEmoji(role)}</span>
@@ -98,12 +116,14 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
               <div className="flex flex-col gap-1.5 sm:gap-1 xs:gap-0.5">
                 {rolePlayers.map((player) => {
                   const isMe = player.id === myPeerId
+                  const isHost = player.isHost
                   const displayName = player.name || `Jogador-${player.id.slice(0, 6)}`
                   
                   return (
                     <div key={player.id} className={`flex justify-between items-center bg-win98-light-gray border border-win98-dark-gray px-2 py-1 sm:px-1.5 sm:py-0.5 xs:px-1 xs:py-0.5 transition-all ${isMe ? 'bg-[#ffffe1] border-win98-blue' : ''}`}>
                       <span className="font-bold text-[11px] sm:text-[10px] xs:text-[9px] flex items-center gap-1">
                         {displayName}
+                        {isHost && <span className="text-[10px] bg-yellow-500 text-yellow-900 px-1 rounded font-bold border border-yellow-700">HOST</span>}
                         {isMe && <span className="text-[10px] bg-win98-blue text-white px-1 rounded">VOCÊ</span>}
                       </span>
                       <span className="text-base font-bold text-win98-blue sm:text-sm xs:text-xs">
@@ -131,7 +151,8 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
                 })}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </>
