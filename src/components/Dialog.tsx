@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef, startTransition } from 'react'
 import type { ReactNode } from "react"
 import type { PlayerRole } from '../types/poker'
 import { getCachedPlayerName, getCachedPlayerRole, setCachedPlayerName, setCachedPlayerRole } from '../utils/storage'
@@ -119,13 +119,17 @@ interface PlayerInfoDialogProps {
 export function PlayerInfoDialog({ isOpen, onConfirm }: PlayerInfoDialogProps) {
   const [nameValue, setNameValue] = useState(() => getCachedPlayerName())
   const [roleValue, setRoleValue] = useState<PlayerRole>(() => getCachedPlayerRole())
+  const prevIsOpenRef = useRef(isOpen)
 
-  if (isOpen && nameValue !== getCachedPlayerName()) {
-    setNameValue(getCachedPlayerName())
-  }
-  if (isOpen && roleValue !== getCachedPlayerRole()) {
-    setRoleValue(getCachedPlayerRole())
-  }
+  useEffect(() => {
+    if (isOpen && !prevIsOpenRef.current) {
+      startTransition(() => {
+        setNameValue(getCachedPlayerName())
+        setRoleValue(getCachedPlayerRole())
+      })
+    }
+    prevIsOpenRef.current = isOpen
+  }, [isOpen])
 
   const handleConfirm = () => {
     const trimmedName = nameValue.trim()
@@ -211,13 +215,17 @@ interface EditPlayerInfoDialogProps {
 export function EditPlayerInfoDialog({ isOpen, onClose, onConfirm, currentName, currentRole }: EditPlayerInfoDialogProps) {
   const [nameValue, setNameValue] = useState(() => currentName)
   const [roleValue, setRoleValue] = useState<PlayerRole>(() => currentRole)
+  const prevIsOpenRef = useRef(isOpen)
 
-  if (isOpen && nameValue !== currentName) {
-    setNameValue(currentName)
-  }
-  if (isOpen && roleValue !== currentRole) {
-    setRoleValue(currentRole)
-  }
+  useEffect(() => {
+    if (isOpen && !prevIsOpenRef.current) {
+      startTransition(() => {
+        setNameValue(currentName)
+        setRoleValue(currentRole)
+      })
+    }
+    prevIsOpenRef.current = isOpen
+  }, [isOpen, currentName, currentRole])
 
   const handleConfirm = () => {
     const trimmedName = nameValue.trim()

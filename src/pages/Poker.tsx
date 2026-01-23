@@ -131,7 +131,8 @@ function Poker() {
     }
   }
 
-  const canReveal = myVote !== null && !votesRevealed
+  const isHost = hostId !== null && hostId === myPeerId
+  const canReveal = isHost ? !votesRevealed : (myVote !== null && !votesRevealed)
 
   const handleTitleClick = () => {
     setSecretClicks(prev => prev + 1)
@@ -224,7 +225,7 @@ function Poker() {
             onReveal={revealVotes}
             onClear={clearVote}
             onReset={resetVotes}
-            isHost={hostId !== null && hostId === myPeerId}
+            isHost={isHost}
             />
           </div>
         </div>

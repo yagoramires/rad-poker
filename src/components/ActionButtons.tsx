@@ -22,7 +22,6 @@ export function ActionButtons({
   const getRevealTitle = () => {
     if (!isHost) return 'Somente o host pode revelar as estimativas'
     if (votesRevealed) return 'Estimativas já foram reveladas'
-    if (!hasVote) return 'Vote primeiro para revelar estimativas'
     return 'Mostrar todas as estimativas'
   }
 
