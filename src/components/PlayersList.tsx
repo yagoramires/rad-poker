@@ -78,10 +78,10 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
   const allPlayersVoted = players.length > 0 && players.every(p => p.hasVoted)
 
   return (
-    <>
+    <div className="flex flex-col h-full min-h-0">
       <div className="h-0.5 bg-win98-dark-gray border-t border-win98-white my-2 shrink-0 sm:my-1.5 xs:my-1"></div>
-      <div className="mb-4 shrink-0 sm:mb-3 xs:mb-2.5">
-        <div className="text-[11px] font-bold mb-2 text-black flex justify-between items-center flex-wrap gap-2 sm:text-[10px] sm:mb-1.5 xs:text-[9px]">
+      <div className="flex flex-col flex-1 min-h-0 mb-4 sm:mb-3 xs:mb-2.5 overflow-hidden">
+        <div className="text-[11px] font-bold mb-2 text-black flex justify-between items-center flex-wrap gap-2 shrink-0 sm:text-[10px] sm:mb-1.5 xs:text-[9px]">
           <span><span className="mr-1">👥</span>Jogadores Conectados:</span>
           <div className="flex items-center gap-2">
             {allPlayersVoted && !votesRevealed && (
@@ -104,7 +104,7 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-3 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-win98-dark-gray scrollbar-track-win98-white sm:gap-2 sm:mt-1.5 sm:max-h-[200px] xs:gap-1.5 xs:mt-1 xs:max-h-[150px]">
+        <div className="flex flex-col gap-3 mt-2 flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-win98-dark-gray scrollbar-track-win98-white sm:gap-2 sm:mt-1.5 xs:gap-1.5 xs:mt-1">
           {sortedRoles.map((role) => {
             const rolePlayers = playersByRole[role]
             return (
@@ -155,6 +155,6 @@ export function PlayersList({ players, myPeerId, myPlayerRole, votesRevealed }: 
           })}
         </div>
       </div>
-    </>
+    </div>
   )
 }

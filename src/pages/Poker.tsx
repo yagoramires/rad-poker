@@ -134,9 +134,6 @@ function Poker() {
     }
   }
 
-  console.log('hostID', hostId)
-  console.log('myPeerId', myPeerId)
-
   return (
     <>
       <PlayerInfoDialog
@@ -166,48 +163,54 @@ function Poker() {
           </button>
         }
       >
-        <RoomInfo
-          roomCode={roomCode}
-          isConnected={isConnected}
-          playerName={myPlayerName || effectivePlayerName || 'Jogador'}
-          onCopyRoomCode={copyRoomCode}
-        />
+        <div className="flex flex-col h-full min-h-0">
+          <RoomInfo
+            roomCode={roomCode}
+            isConnected={isConnected}
+            playerName={myPlayerName || effectivePlayerName || 'Jogador'}
+            onCopyRoomCode={copyRoomCode}
+          />
 
-        {connectionError && (
-          <>
-            <div className="h-0.5 bg-win98-dark-gray border-t border-win98-white my-2 shrink-0 sm:my-1.5 xs:my-1"></div>
-            <div className="bg-[#ffcccc] border-2 border-[#aa0000] p-2 my-2 text-[11px] text-[#aa0000] font-bold wrap-break-words">
-              {connectionError}
-            </div>
-          </>
-        )}
+          {connectionError && (
+            <>
+              <div className="h-0.5 bg-win98-dark-gray border-t border-win98-white my-2 shrink-0 sm:my-1.5 xs:my-1"></div>
+              <div className="bg-[#ffcccc] border-2 border-[#aa0000] p-2 my-2 text-[11px] text-[#aa0000] font-bold wrap-break-words">
+                {connectionError}
+              </div>
+            </>
+          )}
 
-        {currentTask && <CurrentTask task={currentTask} />}
+          {currentTask && <CurrentTask task={currentTask} />}
 
-        <PokerCards
-          cards={pokerCards}
-          selectedIndex={myVoteIndex}
-          votesRevealed={votesRevealed}
-          onVote={vote}
-          streamingMode={streamingMode}
-        />
+          <PokerCards
+            cards={pokerCards}
+            selectedIndex={myVoteIndex}
+            votesRevealed={votesRevealed}
+            onVote={vote}
+            streamingMode={streamingMode}
+          />
 
-        <PlayersList
-          players={players}
-          myPeerId={myPeerId}
-          myPlayerRole={myPlayerRole}
-          votesRevealed={votesRevealed}
-        />
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <PlayersList
+              players={players}
+              myPeerId={myPeerId}
+              myPlayerRole={myPlayerRole}
+              votesRevealed={votesRevealed}
+            />
+          </div>
 
-        <ActionButtons
-          canReveal={canReveal}
-          votesRevealed={votesRevealed}
-          hasVote={myVote !== null}
-          onReveal={revealVotes}
-          onClear={clearVote}
-          onReset={resetVotes}
-          isHost={hostId !== null && hostId === myPeerId}
-        />
+          <div className="shrink-0">
+            <ActionButtons
+            canReveal={canReveal}
+            votesRevealed={votesRevealed}
+            hasVote={myVote !== null}
+            onReveal={revealVotes}
+            onClear={clearVote}
+            onReset={resetVotes}
+            isHost={hostId !== null && hostId === myPeerId}
+            />
+          </div>
+        </div>
       </Window>
     </>
   )

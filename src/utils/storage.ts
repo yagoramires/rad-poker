@@ -2,7 +2,8 @@ import type { PlayerRole } from '../types/poker'
 
 const STORAGE_KEYS = {
   PLAYER_NAME: 'poker_player_name',
-  PLAYER_ROLE: 'poker_player_role'
+  PLAYER_ROLE: 'poker_player_role',
+  WINDOW_HEIGHT: 'poker_window_height'
 } as const
 
 export function getCachedPlayerName(): string {
@@ -54,5 +55,24 @@ export function clearPlayerCache(): void {
     localStorage.removeItem(STORAGE_KEYS.PLAYER_ROLE)
   } catch {
     console.error('Error clearing player cache')
+  }
+}
+
+export function getCachedWindowHeight(): number | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const height = localStorage.getItem(STORAGE_KEYS.WINDOW_HEIGHT)
+    return height ? parseInt(height, 10) : null
+  } catch {
+    return null
+  }
+}
+
+export function setCachedWindowHeight(height: number): void {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(STORAGE_KEYS.WINDOW_HEIGHT, height.toString())
+  } catch {
+    console.error('Error setting cached window height:', height)
   }
 }
