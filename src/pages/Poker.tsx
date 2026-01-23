@@ -9,7 +9,7 @@ import { CurrentTask } from '../components/CurrentTask'
 import { PokerCards } from '../components/PokerCards'
 import { PlayersList } from '../components/PlayersList'
 import { ActionButtons } from '../components/ActionButtons'
-import { PlayerInfoDialog } from '../components/Dialog'
+import { PlayerInfoDialog, EditPlayerInfoDialog } from '../components/Dialog'
 import type { PlayerRole } from '../types/poker'
 
 function Poker() {
@@ -25,6 +25,7 @@ function Poker() {
   const hasNameParam = searchParams.has('name')
   const hasRoleParam = searchParams.has('role')
   const [showPlayerInfoDialog, setShowPlayerInfoDialog] = useState(() => !hasNameParam || !hasRoleParam)
+  const [showEditPlayerDialog, setShowEditPlayerDialog] = useState(false)
 
   const handlePlayerInfoConfirm = (name: string, role: PlayerRole) => {
     setShowPlayerInfoDialog(false)
@@ -32,6 +33,14 @@ function Poker() {
     newParams.set('name', name)
     newParams.set('role', role)
     setSearchParams(newParams)
+  }
+
+  const handleEditPlayerConfirm = (name: string, role: PlayerRole) => {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('name', name)
+    newParams.set('role', role)
+    setSearchParams(newParams)
+    success('Informações atualizadas! Reconectando...')
   }
 
   const effectivePlayerName = hasNameParam ? playerName : ''
@@ -140,6 +149,13 @@ function Poker() {
         isOpen={showPlayerInfoDialog}
         onConfirm={handlePlayerInfoConfirm}
       />
+      <EditPlayerInfoDialog
+        isOpen={showEditPlayerDialog}
+        onClose={() => setShowEditPlayerDialog(false)}
+        onConfirm={handleEditPlayerConfirm}
+        currentName={myPlayerName || effectivePlayerName || 'Jogador'}
+        currentRole={myPlayerRole || effectivePlayerRole}
+      />
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       <Window
         title="Scrum Poker - Planning Session"
@@ -169,6 +185,7 @@ function Poker() {
             isConnected={isConnected}
             playerName={myPlayerName || effectivePlayerName || 'Jogador'}
             onCopyRoomCode={copyRoomCode}
+            onEditPlayer={() => setShowEditPlayerDialog(true)}
           />
 
           {connectionError && (
